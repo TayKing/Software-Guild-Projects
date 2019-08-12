@@ -1,0 +1,157 @@
+﻿@model GuildCars.UI.Models.SalesViewModel
+@{
+    ViewBag.Title = "Sales";
+}
+<h2>Sales Vehicle</h2>
+<div class="row" style="border:2px solid black">
+    <div class="col-12" style="margin:10px;">
+        <table style="width:100%">
+            <tbody>
+                <tr>
+                    <td colspan="7">
+                        <p><strong>@Model.Vehicle.VehicleYear  @Model.Vehicle.Make @Model.Vehicle.Model</strong></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="4" style="max-width:100px">
+                        <img src="@Url.Content("~/Images/Inventory-" + Model.Vehicle.VehicleID.ToString() + ".png")" style="margin:0px; padding:0px; width:100%" />
+                    </td>
+                    <td class="text-right"><strong>Body Style:</strong></td>
+                    <td> @Model.Vehicle.BodyStyle</td>
+                    <td class="text-right"><strong>Interior:</strong></td>
+                    <td> @Model.Vehicle.Interior</td>
+                    <td class="text-right"><strong>Sale Price:</strong></td>
+                    <td> @Model.Vehicle.Price.ToString("c")</td>
+                </tr>
+                <tr>
+                    <td class="text-right"><strong>Trans:</strong></td>
+                    <td> @Model.Vehicle.Transmission</td>
+                    <td class="text-right"><strong>Mileage:</strong></td>
+                    <td> @Model.Vehicle.Mileage</td>
+                    <td class="text-right"><strong>MSRP:</strong></td>
+                    <td> @Model.Vehicle.MSRP.ToString("c")</td>
+                </tr>
+                <tr>
+                    <td class="text-right"><strong>Color:</strong></td>
+                    <td> @Model.Vehicle.Color</td>
+                    <td class="text-right"><strong>VIN #:</strong></td>
+                    <td colspan="3"> @Model.Vehicle.VIN</td>
+                </tr>
+                <tr>
+                    <td class="text-right"><strong>Description:</strong></td>
+                    <td colspan="5"> @Model.Vehicle.VehicleDescription</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<h1>Sales Information</h1>
+<div class="row" style="margin-top:12px; width:100%">
+    @using (Html.BeginForm("SaveSales", "Sales", FormMethod.Post, new { id = "SalesForm", style = "width:100%", @class = "form-inline" }))
+    {
+        @Html.HiddenFor(m => m.Vehicle.VehicleID)
+        <div class="form-group col-xs-12 col-md-6 car-form">
+            <label class="car-label">Name</label>
+            @Html.TextBoxFor(m => m.Sales.CustomerName, new { @class = "form-control" })
+        </div>
+        <div class="form-group col-xs-12 col-md-6 car-form">
+            <label class="car-label">Phone</label>
+            @Html.TextBoxFor(m => m.Sales.CustomerPhone, new { @class = "form-control", @id = "PhoneInput" })
+        </div>
+        <div class="form-group col-xs-12 col-md-6 car-form">
+            <label class="car-label">Email</label>
+            @Html.TextBoxFor(m => m.Sales.CustomerEmail, new { @class = "form-control", @id = "EmailInput" })
+        </div>
+        <div class="form-group col-xs-12 col-md-6 car-form">
+            <label class="car-label">Street1</label>
+            @Html.TextBoxFor(m => m.Sales.CustomerAdd1, new { @class = "form-control" })
+        </div>
+        <div class="form-group col-xs-12 col-md-6 car-form">
+            <label class="car-label">Street2</label>
+            @Html.TextBoxFor(m => m.Sales.CustomerAdd2, new { @class = "form-control" })
+        </div>
+        <div class="form-group col-xs-12 col-md-6 car-form">
+            <label class="car-label">City</label>
+            @Html.TextBoxFor(m => m.Sales.City, new { @class = "form-control" })
+        </div>
+        <div class="form-group col-xs-12 col-md-6 car-form">
+            <label class="car-label">State</label>
+            @Html.DropDownListFor(m => m.Sales.StateID, new SelectList(Model.States, "StateID", "StateID"), new { @class = "form-control" })
+        </div>
+        <div class="form-group col-xs-12 col-md-6 car-form">
+            <label class="car-label">Zipcode</label>
+            @Html.TextBoxFor(m => m.Sales.Zipcode, new { @class = "form-control" })
+        </div>
+
+        <div style="width:100%; height:5px; border-top:2px solid black"></div>
+
+        <div class="form-group col-xs-12 col-md-6 car-form">
+            <label class="car-label">Sales Price</label>
+            @Html.TextBoxFor(m => m.Sales.SalesPrice, new { @class = "form-control", @Value = Model.Vehicle.MSRP })
+        </div>
+        <div class="form-group col-xs-12 col-md-6 car-form">
+            <label class="car-label">Sales Type</label>
+            @Html.DropDownListFor(m => m.Sales.SalesTypeID, new SelectList(Model.Types, "SalesTypeID", "SalesTypeName"), new { @class = "form-control" })
+        </div>
+        <button class="btn btn-primary">Save</button>
+    }
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $('#SalesForm').validate({
+                rules: {
+                    'Sales.Name': {
+                        required: true
+                    },
+                    'Sales.Phone': {
+                        required: function (element) {
+                            return $('#EmailInput').val() == '';
+                        },
+                    },
+                    'Sales.Email': {
+                        required: function (element) {
+                            return $('#PhoneInput').val() == '';
+                        },
+                        email: true
+                    },
+                    'Sales.Street1': {
+                        required: true
+                    },
+                    'Sales.City': {
+                        required: true
+                    },
+                    'Sales.Zipcode': {
+                        required: true,
+                        digits: true,
+                        minlength: 5,
+                        maxlength: 5
+                    },
+                    'Sales.SalesPrice': {
+                        required: true,
+                        range: [@(Model.Vehicle.MSRP * 0.95f), @Model.Vehicle.MSRP]
+                    },
+                },
+                messages: {
+                    'Sales.Email': {
+                        required: "Please enter either email or phone number.",
+                        email: "Please enter a valid email address."
+                    },
+                    'Sales.Phone': {
+                        required: "Please enter either email or phone number."
+                    },
+                    'Sales.SalesPrice': "Sales Price must be less than the MSRP and more than 95% of the MSRP. (MSRP = " + @Model.Vehicle.MSRP + ")",
+                    'Sales.Zipcode': {
+                        minlength: 'Zipcode must be 5 digits',
+                        maxlength: 'Zipcode must be 5 digits',
+                        digits: 'Zipcode must be 5 digits'
+                    }
+                }
+            });
+        });
+
+
+    </script>
+
+}

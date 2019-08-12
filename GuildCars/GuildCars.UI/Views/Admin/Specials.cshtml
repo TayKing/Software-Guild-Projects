@@ -1,0 +1,57 @@
+﻿@model GuildCars.UI.Models.SpecialsViewModel
+@{
+    ViewBag.Title = "Specials";
+}
+<h2>Specials</h2>
+<div class="row" style="margin-bottom:15px">
+    <div class="col-12" style="border:2px solid black">
+        @using (Html.BeginForm("AddSpecial", "Admin", FormMethod.Post, new { id = "SpecialForm" }))
+        {
+            <div class="form-group">
+                <label><strong>Title</strong></label>
+                @Html.TextBoxFor(m => m.SelectedSpecial.SpecialName, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label><strong>Description</strong></label>
+                @Html.TextAreaFor(m => m.SelectedSpecial.SpecialDescription, new { @class = "form-control" })
+            </div>
+            <button class="btn btn-primary">Save</button>
+        }
+    </div>
+</div>
+<div class="row" style="width:100%">
+    @foreach (var s in Model.CurrentSpecials)
+    {
+        <div class="col-12" style="border:2px solid black; height: auto; margin-top:10px;">
+            <div class="row">
+                <div class="col-2 justify-content-center">
+                    <img src="@Url.Content("~/Images/SpecialsLogo.png")" style="margin:0px; padding:0px; width:40%;" />
+                </div>
+                <div class="col-9">
+                    <h2>@s.SpecialName</h2>
+                    <p>@s.SpecialDescription</p>
+                </div>
+                <div class="col-1">
+                    <a href="@Url.Action("DeleteSpecial", "Admin", new { Id = s.SpecialID })" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts{
+    <script>$(document).ready(function () {
+
+            $('#SpecialForm').validate({
+                rules: {
+                    'SelectedSpecial.SpecialName': {
+                        required: true
+                    },
+                    'SelectedSpecial.SpecialDescription': {
+                        required: true
+                    }
+                }
+            });
+        });</script>
+
+}
+

@@ -1,0 +1,66 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using GuildCars.UI.Models;
+@using Microsoft.AspNet.Identity.Owin;
+@using Microsoft.Owin.Security;
+@using System.Web;
+@using System.Web.Mvc;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                <img src="~/Images/GuildCars.png" width="30" height="30" alt="">
+                GuildCars
+            </a>
+            <ul class="nav navbar-nav mr-auto">
+                <li>@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</li>
+                <li>@Html.ActionLink("New Inventory", "New", "Inventory", null, new { @class = "nav-link" })</li>
+                <li>@Html.ActionLink("Used Inventory", "Used", "Inventory", null, new { @class = "nav-link" })</li>
+                <li>@Html.ActionLink("Specials", "Specials", "Home", null, new { @class = "nav-link" })</li>
+                <li>@Html.ActionLink("Contact", "Contact", "Home", new { VIN = "" }, new { @class = "nav-link" })</li>
+                @if (Request.IsAuthenticated)
+                {
+                    var userMgr = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                    var currentUser = userMgr.FindById(User.Identity.GetUserId());
+                    if (currentUser.UserRole == "Sales")
+                    {
+                        <li>@Html.ActionLink("Sales", "Index", "Sales", null, new { @class = "nav-link" })</li>
+                    }
+                    if (currentUser.UserRole == "Admin")
+                    {
+                        <li>@Html.ActionLink("Sales", "Index", "Sales", null, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Admin", "Index", "Admin", null, new { @class = "nav-link" })</li>
+                    }
+                }
+            </ul>
+            <ul class="nav navbar-nav ml-auto">
+                @if (Request.IsAuthenticated)
+                {
+                    <li>
+                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-primary">Log Out</button>
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
+    <div class="container body-content" style="margin-top:10px;">
+        @RenderBody()
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

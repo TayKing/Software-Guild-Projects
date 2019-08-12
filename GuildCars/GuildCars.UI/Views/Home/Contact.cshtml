@@ -1,0 +1,79 @@
+﻿@model GuildCars.Models.Tables.Contact
+@{
+    ViewBag.Title = "Contact Us";
+}
+<h1>Contact Us</h1>
+<div class="row">
+    <div class="col-5">
+        @using (Html.BeginForm("AddContact", "Home", FormMethod.Post, new { id = "ContactForm" }))
+        {
+            <div class="form-group">
+                <div class="row d-block" style="display:block; margin-top:10px;">
+                    <label style="width:100%"><strong>Name</strong></label>
+                    @Html.TextBoxFor(m => m.ContactName, new { @class = "form-control" })
+                </div>
+                <div class="row d-block" style="display:block; margin-top:10px;">
+                    <label style="width:100%"><strong>Email</strong></label>
+                    @Html.TextBoxFor(m => m.ContactEmail, new { @class = "form-control", @id = "EmailInput" })
+                </div>
+                <div class="row d-block" style="display:block; margin-top:10px;">
+                    <label style="width:100%"><strong>Phone</strong></label>
+                    @Html.TextBoxFor(m => m.ContactPhone, new { @class = "form-control", @id = "PhoneInput" })
+                </div>
+                <div class="row d-block" style="display:block; margin-top:10px;">
+                    <label style="width:100%"><strong>Message</strong></label>
+                    @Html.TextAreaFor(m => m.ContactReason, new { @class = "form-control", rows = 10 })
+                </div>
+            </div>
+            <button class="btn btn-primary">Submit</button>
+        }
+    </div>
+    <div class="col-7">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3004.1180146677075!2d-81.36044838510416!3d41.15377611840847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x883125211a78e03f%3A0x736779bb2e960210!2s111+W+Main+St%2C+Kent%2C+OH+44240!5e0!3m2!1sen!2sus!4v1563757592086!5m2!1sen!2sus"
+                width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+        <p style="margin-bottom:0px;">111 W Main St</p>
+        <p style="margin-top:0px;">Kent, OH 44444</p>
+        <p style="margin-bottom:0px;">Sales: 111-111-1111</p>
+        <p style="margin-top:0px;">Service: 111-111-1112</p>
+    </div>
+
+</div>
+
+@section scripts{
+
+    <script>
+    $(document).ready(function () {
+            $('#ContactForm').validate({
+                rules: {
+                    'ContactName': {
+                        required: true
+                    },
+                    'ContactPhone': {
+                        required: function (element) {
+                            return $('#EmailInput').val() == null;
+                        },
+                    },
+                    'ContactEmail': {
+                        required: function (element) {
+                            return $('#PhoneInput').val() == null;
+                        },
+                        email: true
+                    },
+                    'ContactReason': {
+                        required: true
+                    }
+                },
+                messages: {
+                    'ContactEmail': {
+                        required: "Please enter either email or phone number.",
+                        email: "Please enter a valid email address."
+                    },
+                    'ContactPhone': {
+                        required: "Please enter either email or phone number."
+                    }
+                }
+            });
+        });
+    </script>
+
+}

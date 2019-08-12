@@ -1,0 +1,44 @@
+﻿@model GuildCars.UI.Models.ModelViewModel
+@using GuildCars.Data.Factories
+@{
+    ViewBag.Title = "Models";
+}
+<h2>Models</h2>
+<div class="row" style="margin-bottom:15px">
+    <div class="col-12" style="border:2px solid black">
+        @using (Html.BeginForm("AddModel", "Admin", FormMethod.Post))
+        {
+        <div class="form-inline" style="padding: 15px">
+            <label style="margin-right: 15px"><strong>New Model</strong></label>
+            @Html.TextBoxFor(m => m.ModelToAdd.ModelName, new { @class = "form-control" })
+            <label style="margin: 15px"><strong>Make</strong></label>
+            @Html.DropDownListFor(m => m.ModelToAdd.MakeID, new SelectList(Model.CurrentMakes, "MakeID", "MakeName"), new { @class = "form-control" })
+            <button class="btn btn-primary" style="margin-left: 15px">Save</button>
+        </div>
+        }
+    </div>
+</div>
+<div class="row">
+    <table class="table table-striped table-sm" style="width:50%; border:2px solid black">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col"><strong>Make</strong></th>
+                <th scope="col" style="border-left:2px solid black"><strong>Model</strong></th>
+                <th scope="col" style="border-left:2px solid black"><strong>Date Added</strong></th>
+                <th scope="col" style="border-left:2px solid black"><strong>User</strong></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var m in Model.CurrentModels)
+            {
+                string make = DataRepositoryFactory.GetRepository().GetMakeByID(m.MakeID).MakeName;
+                <tr>
+                    <td>@make</td>
+                    <td style="border-left:2px solid black">@m.ModelName</td>
+                    <td style="border-left:2px solid black">@m.DateCreated</td>
+                    <td style="border-left:2px solid black">@m.UserCreated</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

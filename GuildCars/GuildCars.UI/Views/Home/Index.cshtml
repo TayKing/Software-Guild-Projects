@@ -1,0 +1,63 @@
+﻿@model GuildCars.Models.Queries.IndexViewModel
+@{
+    ViewBag.Title = "Home";
+}
+<div class="jumbotron" style="padding: 0px; height:279px; ">
+    <div id="specials" class="carousel" data-ride="carousel" style="height:100%; width:100%">
+
+        <ul class="carousel-indicators">
+            @foreach (var s in Model.Specials)
+            {
+                if (s.SpecialID == 1)
+                {
+                    <li data-target="#specials" data-slide-to="@(s.SpecialID - 1)" class="active"></li>
+                }
+                else
+                {
+                    <li data-target="#specials" data-slide-to="@(s.SpecialID - 1)"></li>
+                }
+            }
+        </ul>
+        <div class="carousel-inner" style="height:100%; width:100%;"
+             onclick="location.href='@Url.Action("Specials", "Home")'">
+            @foreach (var s in Model.Specials)
+            {
+                if (s.SpecialID == 1)
+                {
+                    <div class="carousel-item active" style="
+                        background-image: url(@Url.Content("~/Images/SpecialsBG.png"));
+                        background-size: cover;
+                        background-repeat: no-repeat;
+                        height:100%; width:100% ">
+                        <h1 style="margin-left:150px; margin-top:50px; color:yellow;">@s.SpecialName</h1>
+                        <p style="margin-left:150px; margin-top:12px; color:white;">@s.SpecialDescription</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="carousel-item" style="
+                        background-image: url(@Url.Content("~/Images/SpecialsBG.png"));
+                        background-size: cover;
+                        background-repeat: no-repeat;
+                        height:100%; width:100% ">
+                        <h1 style="margin-left:150px; margin-top:50px; color:yellow;">@s.SpecialName</h1>
+                        <p style="margin-left:150px; margin-top:12px; color:white;">@s.SpecialDescription</p>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<div class="row" style="width:100%; border-top:2px solid black"></div>
+<h3>Featured Vehicles</h3>
+<div class="row justify-content-sm-center">
+    @foreach (var vehicle in Model.Vehicles)
+    {
+        <div class="FeaturedVehicleContainer col-lg-3 col-md-6 col-xs-12" style="border:2px solid; margin: 10px; width: 90%; height: 90%;"
+             onclick="location.href='@Url.Action("Details", "Inventory", new { id = vehicle.VehicleID })'">
+            <p class="FeaturedVehicle"><img src="@Url.Content("~/Images/Inventory-" + vehicle.VehicleID.ToString() + ".png")" style="max-width: 90%; max-height: 150px; border:2px solid black; margin:2px;" /></p>
+            <p class="FeaturedVehicle">@vehicle.VehicleYear @vehicle.Make @vehicle.Model</p>
+            <p class="FeaturedVehicle">@vehicle.MSRP.ToString("c")</p>
+        </div>
+    }
+</div>

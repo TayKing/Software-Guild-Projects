@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vending Machine</title>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <div class="container">
+      <h1 class="text-center">Vending Machine</h1>
+      <hr/>
+    </div>
+
+    <div class="col-md-8 container" id="item-selection">
+
+      <div class="row">
+        <div class="col-md-3">
+        </div>
+      <div class="col-md-3 box" id="1">
+      </div>
+      <div class="col-md-3 box" id="2">
+      </div>
+      <div class="col-md-3 box" id="3">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+      </div>
+      <div class="col-md-3 box" id="4">
+      </div>
+      <div class="col-md-3 box" id="5">
+      </div>
+      <div class="col-md-3 box" id="6">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+      </div>
+      <div class="col-md-3 box" id="7">
+      </div>
+      <div class="col-md-3 box" id="8">
+      </div>
+      <div class="col-md-3 box" id="9">
+      </div>
+    </div>
+    </div>
+
+    <div class="col-md-4 text-center" id="purchase-content">
+
+      <form>
+      <h3>Total $ in</h3>
+      <div class="form-group">
+      <input class="input-lg form-group" type="number" value="0.00" id="total-monies" readonly/>
+      <div class="form-group">
+      <button class="btn btn-default" type="button" id="add-dollar">Add Dollar</button>
+      <button class="btn btn-default" type="button" id="add-quarter">Add Quarter</button>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-default" type="button" id="add-dime">Add Dime</button>
+      <button class="btn btn-default" type="button" id="add-nickel">Add Nickel</button>
+    </div>
+    </div>
+  </form>
+      <hr/>
+
+<form>
+      <h3>Messages</h3>
+
+      <input style="width: 250px" class="input-lg form-group" type="text" id="messages" readonly/>
+      <div class="form-group">
+      <label class="lb-lg" for="vending">Item: </label>
+      <input class="input-lg" type="text" id="vending" readonly/>
+      </div>
+      <button class="btn btn-default" type="button" id="purchase">Make Purchase</button>
+
+  </form>
+      <hr/>
+
+      <form>
+      <h3>Change</h3>
+      <div class="form-group">
+      <input class="input-lg" type="text" name="change" id="change" readonly/>
+      </div>
+      <button class="btn btn-default" type="button" id="change-return">Change Return</button>
+
+      </form>
+    </div>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/home.js"></script>
+  </body>
+
+</html>

@@ -1,0 +1,63 @@
+﻿@model GuildCars.Models.Queries.VehicleViewModel
+@{
+    ViewBag.Title = "Details";
+}
+<div class="row">
+    <h2>Vehicle Details</h2>
+</div>
+
+<div class="row" style="border:2px solid black">
+    <div class="col-12" style="margin:10px;">
+        <table style="width:100%">
+            <tbody>
+                <tr>
+                    <td colspan="7">
+                        <p><strong>@Model.VehicleYear  @Model.Make @Model.Model</strong></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="4" style="max-width:100px">
+                        <img src="@Url.Content("~/Images/Inventory-" + Model.VehicleID.ToString() + ".png")" style="margin:0px; padding:0px; width:100%" />
+                    </td>
+                    <td class="text-right"><strong>Body Style:</strong></td>
+                    <td> @Model.BodyStyle</td>
+                    <td class="text-right"><strong>Interior:</strong></td>
+                    <td> @Model.Color</td>
+                    <td class="text-right"><strong>Sale Price:</strong></td>
+                    <td> @Model.Price.ToString("c")</td>
+                </tr>
+                <tr>
+                    <td class="text-right"><strong>Trans:</strong></td>
+                    <td> @Model.Transmission</td>
+                    <td class="text-right"><strong>Mileage:</strong></td>
+                    <td> @Model.Mileage</td>
+                    <td class="text-right"><strong>MSRP:</strong></td>
+                    <td> @Model.MSRP.ToString("c")</td>
+                </tr>
+                <tr>
+                    <td class="text-right"><strong>Color:</strong></td>
+                    <td> @Model.Color</td>
+                    <td class="text-right"><strong>VIN #:</strong></td>
+                    <td colspan="3"> @Model.VIN</td>
+                </tr>
+                <tr>
+                    <td class="text-right"><strong>Description:</strong></td>
+                    <td colspan="5"> @Model.VehicleDescription</td>
+                </tr>
+            </tbody>
+        </table>
+        @if (!Model.IsSold)
+        {
+            <a class="btn btn-primary float-right" style="margin-right:12px;"
+               href="@Url.Action("Contact", "Home", new { VIN = Model.VIN })">
+                Contact Us
+            </a>
+        }
+        else
+        {
+            <button class="btn btn-secondary float-right" style="margin-right:12px;" disabled>
+                Unavailaible - Sold
+            </button>
+        }
+    </div>
+</div>

@@ -1,0 +1,165 @@
+﻿@{
+    ViewBag.Title = "New Vehicles";
+}
+<h2>New Vehicles</h2>
+<div class="row" style="border:2px solid black; padding:10px;">
+    <h2><strong>Quick Search</strong></h2>
+    <div class="row justify-content-center" style="margin:0px; width:100%;">
+        <form class="form-inline justify-content-center" id="SearchForm">
+            <div class="form-row justify-content-center" style="width:100%">
+                <div class="form-group" style="margin:0px 12px 0px 12px;">
+                    <input type="text" class="form-control" id="InputQuery" placeholder="Enter make, model, or year" style="min-width:250px;">
+                </div>
+                <div class="form-group" style="margin:0px 12px 0px 12px;">
+                    <label for="InputMinPrice"><strong>Price</strong></label>
+                    <select class="form-control" id="InputMinPrice" style="margin:0px 2px 0px 2px;">
+                        <option>No Min</option>
+                        @for (int i = 0; i <= 100000; i += 1000)
+                        {
+                            if (i > 20000)
+                            {
+                                i += 9000;
+                            }
+                            <option>@i</option>
+                        }
+                    </select>
+                    <select class="form-control" id="InputMaxPrice" style="margin:0px 2px 0px 2px;">
+                        <option>No Max</option>
+                        @for (int i = 0; i <= 100000; i += 1000)
+                        {
+                            if (i > 20000)
+                            {
+                                i += 9000;
+                            }
+                            <option>@i</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group" style="margin:0px 12px 0px 12px;">
+                    <label for="InputMinYear"><strong>Year</strong></label>
+                    <select class="form-control" id="InputMinYear" style="margin:0px 2px 0px 2px;">
+                        <option>No Min</option>
+                        @for (int i = 2000; i <= 2020; i++)
+                        {
+                            <option>@i</option>
+                        }
+                    </select>
+                    <select class="form-control" id="InputMaxYear" style="margin:0px 2px 0px 2px;">
+                        <option>No Max</option>
+                        @for (int i = 2000; i <= 2020; i++)
+                        {
+                            <option>@i</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-row justify-content-center" style="width:100%; padding:2px;">
+                <button type="submit" onclick="search()" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <h1>Search Results</h1>
+    <div class="col-12" id="SearchResults">
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#SearchForm").submit(function (e) {
+                search();
+                return false;
+            });
+        });
+
+
+        function search() {
+
+            var ImagePathBase = '@Url.Content("~/Images/")';
+            var DetailsPath = '@Url.Action("Details", "Inventory")/';
+
+            var searchData = {
+                'IsNew': true,
+                'QueryString': $('#InputQuery').val(),
+                'MinPrice': $('#InputMinPrice').val(),
+                'MaxPrice': $('#InputMaxPrice').val(),
+                'MinYear': $('#InputMinYear').val(),
+                'MaxYear': $('#InputMaxYear').val()
+            }
+            if (searchData.MinPrice == 'No Min')
+                searchData.MinPrice = null;
+            if (searchData.MaxPrice == 'No Max')
+                searchData.MaxPrice = null;
+            if (searchData.MinYear == 'No Min')
+                searchData.MinYear = null;
+            if (searchData.MaxYear == 'No Max')
+                searchData.MaxYear = null;
+
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:54699/api/vehicle/search/',
+                data: searchData,
+                success: function (response) {
+                    $('#SearchResults').empty();
+                    if (response.length === 0) {
+
+                        $('#SearchResults').append('<p><strong>No results found. Try searching for something else!</strong></p>');
+                        return;
+                    }
+                    $.each(response, function (index, vehicle) {
+                        if (vehicle.IsNew == true) {
+                            var html =
+                                '<div class="row" style="margin:10px; padding:10px; border:2px solid black">' +
+                                '<div class="col-12">' +
+                                '<table style="width:100%;">' +
+                                '<tbody>' +
+                                '<tr>' +
+                                '<td colspan="7">' +
+                                '<p><strong>' + vehicle.VehicleYear + ' ' + vehicle.Make + ' ' + vehicle.Model + '</strong></p>' +
+                                '</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                '<td rowspan="3">' +
+                                '<img src="' + ImagePathBase + 'Inventory-' + vehicle.VehicleID + '.png" style="margin: 0px; padding: 0px; max-width:100px " />' +
+                                '</td>' +
+                                '<td class="text-right"><strong>Body Style: </strong></td>' +
+                                '<td> ' + vehicle.BodyStyle + '</td>' +
+                                '<td class="text-right"><strong>Interior: </strong></td>' +
+                                '<td> ' + vehicle.Interior + '</td>' +
+                                '<td class="text-right"><strong>Sale Price: </strong></td>' +
+                                '<td> $' + vehicle.Price + '.00</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                '<td class="text-right"><strong>Trans: </strong></td>' +
+                                '<td> ' + vehicle.Transmission + '</td>' +
+                                '<td class="text-right"><strong>Mileage: </strong></td>' +
+                                '<td> ' + vehicle.Mileage + '</td>' +
+                                '<td class="text-right"><strong>MSRP: </strong></td>' +
+                                '<td> $' + vehicle.MSRP + '.00</td>' +
+                                '</tr>' +
+                                '<tr>' +
+                                '<td class="text-right"><strong>Color: </strong></td>' +
+                                '<td> ' + vehicle.Color + '</td>' +
+                                '<td class="text-right"><strong>VIN #: </strong></td>' +
+                                '<td colspan="3"> ' + vehicle.VIN + '</td>' +
+                                '</tr>' +
+                                '</tbody>' +
+                                '</table>' +
+                                '<a class="btn btn-primary float-right" style = "margin-right:10px;" href="' + DetailsPath + vehicle.VehicleID + '">' +
+                                'Details' +
+                                '</a>' +
+                                '</div>' +
+                                '</div>'
+                            $('#SearchResults').append(html);
+                        }
+                    });
+                },
+                error: function () {
+                    alert('Error performing search, try again later!');
+                }
+            })
+        }
+    </script>
+}

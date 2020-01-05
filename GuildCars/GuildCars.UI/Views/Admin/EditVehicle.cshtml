@@ -1,0 +1,188 @@
+﻿@model GuildCars.UI.Models.AddVehicleViewModel
+@{
+    ViewBag.Title = "EditVehicle";
+}
+
+<h2>Edit Vehicle</h2>
+<div class="row" style="margin-top:12px; width:100%">
+    @using (Html.BeginForm("EditVehicle", "Admin", FormMethod.Post, new { id = "VehicleForm", style = "width: 100%" }))
+    {
+        @Html.ValidationSummary()
+        @Html.HiddenFor(m => m.VehicleToAdd.VehicleID);
+        <div class="row">
+            <div class="form-group col-4">
+                <label>Make</label>
+                @Html.DropDownListFor(m => m.VehicleToAdd.MakeID, new SelectList(Model.ListMake, "MakeID", "MakeName"), new { @class = "form-control", @id = "MakesList" })
+            </div>
+            <div class="form-group col-4">
+                <label>Model</label>
+                @Html.DropDownListFor(m => m.VehicleToAdd.ModelID, new SelectList(Model.ListModel, "ModelID", "ModelName"), new { @class = "form-control", @id = "ModelsList" })
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group col-4">
+                <label>Type</label>
+                @Html.DropDownListFor(m => m.VehicleToAdd.IsNew, new SelectList(Model.ListTypeOptions, "Value", "Key"), new { @class = "form-control", @id = "TypeSelect" })
+            </div>
+            <div class="form-group col-4">
+                <label>Body Style</label>
+                @Html.DropDownListFor(m => m.VehicleToAdd.BodyStyleID, new SelectList(Model.ListBody, "BodyStyleID", "Body"), new { @class = "form-control" })
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group col-4">
+                <label>Year</label>
+                @Html.TextBoxFor(m => m.VehicleToAdd.VehicleYear, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-4">
+                <label>Transmission</label>
+                @Html.DropDownListFor(m => m.VehicleToAdd.TransmissionID, new SelectList(Model.ListTransmission, "TransmissionID", "TransmissionType"), new { @class = "form-control" })
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group col-4">
+                <label>Color</label>
+                @Html.DropDownListFor(m => m.VehicleToAdd.ColorID, new SelectList(Model.ListColor, "ColorID", "VehicleColor"), new { @class = "form-control" })
+            </div>
+            <div class="form-group col-4">
+                <label>Interior</label>
+                @Html.DropDownListFor(m => m.VehicleToAdd.InteriorID, new SelectList(Model.ListColor, "ColorID", "VehicleColor"), new { @class = "form-control" })
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group col-4">
+                <label>Mileage</label>
+                @Html.TextBoxFor(m => m.VehicleToAdd.Mileage, new { @class = "form-control", @id = "MileageInput" })
+            </div>
+            <div class="form-group col-4">
+                <label>VIN #</label>
+                @Html.TextBoxFor(m => m.VehicleToAdd.VIN, new { @class = "form-control" })
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="form-group col-4">
+                <label>MSRP</label>
+                @Html.TextBoxFor(m => m.VehicleToAdd.MSRP, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-4">
+                <label>Sale Price</label>
+                @Html.TextBoxFor(m => m.VehicleToAdd.Price, new { @class = "form-control" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Description</label>
+            @Html.TextAreaFor(m => m.VehicleToAdd.VehicleDescription, new { @class = "form-control", rows = 6, style = "min-width:60%" })
+        </div>
+        <div class="form-group">
+            <div class="col-2">
+                <img src="@Url.Content("~/Images/Inventory-" + Model.VehicleToAdd.VehicleID.ToString() + ".png")" style="margin:0px; padding:0px; width:100%" />
+            </div>
+            <div>
+                <label>Replace Picture</label>
+                <input id="ImageUpload" name="ImageUpload" type="file" class="form-control" />
+            </div>            
+        </div>
+
+        <div class="form-group col-6" style="display: inline-block">
+            @Html.CheckBoxFor(m => m.VehicleToAdd.IsFeatured) Feature this vehicle
+        </div>
+
+        <div>
+            <a href="@Url.Action("DeleteVehicle", "Admin", new { Id = Model.VehicleToAdd.VehicleID })" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
+            <button class="btn btn-primary">Save</button>
+        </div>
+        
+    }
+</div>
+@section scripts
+{
+    <script>$(document).ready(function () {
+
+            var validatorMessage = "Out of range";
+
+            $.validator.addMethod(
+                "mileageCheck",
+                function (value, element) {
+                    if ($("#TypeSelect").val() == "True") {
+                        if ($("#MileageInput").val() < 0) {
+                            validatorMessage = "New Vehicles must have at least 0 miles";
+                            return false;
+                        }
+                        if ($("#MileageInput").val() > 1000) {
+                            validatorMessage = "New Vehicles must have no more than 1000 miles";
+                            return false;
+                        }
+
+                        return true;
+                    }
+                    else {
+                        if ($("#MileageInput").val() < 1000) {
+                            validatorMessage = "Used Vehicles must have at least 1000 miles";
+                            return false;
+                        }
+
+                        return true;
+                    }
+                    return false;
+                },
+                function (e) { return validatorMessage; }
+            );
+
+            updateModelsList();
+            $('#MakesList').change(function (e) { updateModelsList(); });
+
+            $('#VehicleForm').validate({
+                rules: {
+                    'VehicleToAdd.VehicleYear': {
+                        required: true,
+                        range: [2000, 2020]
+                    },
+                    'VehicleToAdd.Mileage': {
+                        required: true,
+                        number: true,
+                        mileageCheck: true
+                    },
+                    'VehicleToAdd.VIN': {
+                        required: true
+                    },
+                    'VehicleToAdd.MSRP': {
+                        required: true,
+                        number: true
+                    },
+                    'VehicleToAdd.Price': {
+                        required: true,
+                        number: true
+                    },
+                    'VehicleToAdd.VehicleDescription': {
+                        required: true
+                    }
+                }
+            });
+        });
+
+
+        function updateModelsList() {
+
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:54699/api/models/filter/',
+                data: { 'MakeID': $('#MakesList').val() },
+                success: function (response) {
+                    $("#ModelsList").empty();
+                    $.each(response, function (index, m) {
+                        var html = '<option Value="' + m.ModelID + '">' + m.ModelName + '</option>';
+                        $("#ModelsList").append(html);
+                    });
+                },
+                error: function () {
+                    alert('Error filtering models, try again later!');
+                }
+            })
+        }</script>
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Weather</title>
+    <link href="css/bootstrap.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="text-center">Weather Page</h1>
+      <hr/>
+
+      <ul class="list-group" id="errorMessages"></ul>
+
+      <div class="row">
+        <div class="col-md-3">
+        </div>
+        <form class="col-md-9 form-inline" role="form" id="zip-code-form">
+          <div class="form-group">
+            <label for="zip-code" class="control-label">
+              Zipcode:
+            </label>
+
+            <input type="number"
+                     class="form-control is-valid"
+                     id="zip-code"
+                     placeholder="Enter Zipcode" autofocus required/>
+
+
+
+            <label for="units" class="control-label">
+              Units:
+            </label>
+
+              <select class="form-control" name="units" id="units">
+                <option value="imperial">imperial</option>
+                <option value="metric">metric</option>
+              </select>
+
+            <button type="button"
+                    id="getWeather"
+                    class="btn btn-default">
+                Get Weather
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <div id="weatherInfo" style="display: none">
+        <div class="row" >
+          <hr/>
+          <h2 id="currentConditionsCity"></h2>
+          <div class="col-md-4" id="currentConditionsIcon" >
+
+          </div>
+
+          <div class="col-md-4" id="currentConditions">
+
+          </div>
+        </div>
+
+        <div class="row">
+          <hr/>
+          <h2>Five Day Forecast</h2>
+
+          <div class="col-md-2 text-center" id="forecast-1">
+          </div>
+          <div class="col-md-2 text-center" id="forecast-2">
+          </div>
+          <div class="col-md-2 text-center" id="forecast-3">
+          </div>
+          <div class="col-md-2 text-center" id="forecast-4">
+          </div>
+          <div class="col-md-2 text-center" id="forecast-5">
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/home.js"></script>
+  </body>
+
+</html>

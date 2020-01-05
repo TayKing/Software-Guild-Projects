@@ -1,0 +1,90 @@
+﻿@model GuildCars.Models.Tables.User
+@{
+    ViewBag.Title = "EditUser";
+}
+@using (Html.BeginForm("EditUser", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="UserID" name="UserID" value="@Model.UserID">
+    <h4>Edit a User Account.</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="row">
+        <div class="form-group col-5">
+            <label for="FirstName" class="col-md-4 control-label">First Name</label>
+            <div class="col-md-10">
+                <input type="text" id="FirstName" name="FirstName" class="form-control" value="@Model.FirstName" />
+            </div>
+        </div>
+        <div class="form-group col-5">
+            <label for="LastName" class="col-md-4 control-label">Last Name</label>
+            <div class="col-md-10">
+                <input type="text" id="LastName" name="LastName" class="form-control" value="@Model.LastName" />
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="form-group col-5">
+            <label for="Email" class="col-md-4 control-label">Email</label>
+            <div class="col-md-10">
+                <input type="email" id="Email" name="Email" class="form-control" value="@Model.Email" />
+            </div>
+        </div>
+        <div class="form-group col-5">
+            <label for="Role" class="col-md-4 control-label">Role</label>
+            <div class="col-md-4">
+                <select id="Role" name="Role" class="form-control">
+                    @if (Model.Role == "Admin")
+                    {
+                        <option selected>Admin</option>
+                    }
+                    else
+                    {
+                        <option>Admin</option>
+                    }
+                    @if (Model.Role == "Sales")
+                    {
+                        <option selected>Sales</option>
+                    }
+                    else
+                    {
+                        <option>Sales</option>
+                    }
+                    @if (Model.Role == "Disabled")
+                    {
+                        <option selected>Disabled</option>
+                    }
+                    else
+                    {
+                        <option>Disabled</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="form-group col-5">
+            <label for="Password" class="col-md-4 control-label">Password</label>
+            <div class="col-md-10">
+                <input type="password" id="Password" name="Password" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group col-5">
+            <label for="ConfirmPassword" class="col-md-8 control-label">Confirm Password</label>
+            <div class="col-md-10">
+                <input type="password" id="ConfirmPassword" name="ConfirmPassword" class="form-control" />
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group col-5">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-primary" value="Save" />
+        </div>
+    </div>
+}
+@section scripts {
+    @Scripts.Render("~/bundles/jquery")
+}

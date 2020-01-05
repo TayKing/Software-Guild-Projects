@@ -1,0 +1,81 @@
+﻿@model GuildCars.UI.Models.SalesReportViewModel
+@{
+    ViewBag.Title = "Sales";
+}
+<h2>Sales Report</h2>
+<div class="row" style="border:2px solid black; margin: 15px 0 15px; width: 80%">
+    <h5>Filters</h5>
+    <form class="form-inline" id="ReportsForm" style="padding: 15px">
+        <label>User:</label>
+        @Html.DropDownList("UserSelect", new SelectList(Model.Users, "Value", "Text"), new { @class = "form-control", @id = "UserSelect" })
+        <label>From Date:</label>
+        @Html.TextBox("StartDate", "", new { @class = "form-control", @id = "StartDateInput" })
+        <label>To Date:</label>
+        @Html.TextBox("EndDate", "", new { @class = "form-control", @id = "EndDateInput" })
+        <div class="form-row justify-content-left" style="width:100%; padding:2px;">
+            <button type="submit" class="btn btn-primary" style="width:250px; margin-top: 15px">Search</button>
+        </div>
+    </form>
+</div>
+<table id="SalesTable" class="table table-striped table-sm" style="width:auto; border:2px solid black">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col"><strong>User</strong></th>
+            <th scope="col" style="border-left:2px solid black"><strong>Total Sales</strong></th>
+            <th scope="col" style="border-left:2px solid black"><strong>Total Vehicles</strong></th>
+        </tr>
+    </thead>
+    <tbody id="SearchResults"></tbody>
+</table>
+@section Scripts
+{
+    <script>$(document).ready(function () {
+            $("#ReportsForm").submit(function (e) {
+                search();
+                return false;
+            });
+        });
+
+
+        function search() {
+            var searchData = {
+                'UserID': $('#UserSelect').val(),
+                'StartDate': $('#StartDateInput').val(),
+                'EndDate': $('#EndDateInput').val()
+            }
+
+
+            if (searchData.StartDate == '')
+                searchData.StartDate = null;
+            if (searchData.EndDate == '')
+                searchData.EndDate = null;
+
+
+
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:54699/api/reports/sales/',
+                data: searchData,
+                success: function (response) {
+                    $('#SearchResults').empty();
+                    if (response.length === 0) {
+
+                        $('#SearchResults').append('<tr><td><strong>No Sales Found.</strong></td><td style="border-left: 2px solid black"></td><td style="border-left: 2px solid black"></td></tr>');
+                        return;
+                    }
+                    $.each(response, function (index, report) {
+                        var html =
+                            '<tr>' +
+                                '<td>' + report.Name + '</td>' +
+                                '<td style="border-left:2px solid black">' + report.TotalSales + '</td>' +
+                                '<td style="border-left: 2px solid black">' + report.TotalVehicles + '</td>' +
+                            '</tr>';
+                        $('#SearchResults').append(html);
+                    });
+                },
+                error: function () {
+                    alert('Error performing search, try again later!');
+                }
+            })
+        }</script>
+}
